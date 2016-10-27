@@ -106,7 +106,7 @@ class WCMapper extends Mapper<LongWritable, // TODO: change Object to input key 
 
         // TODO: implement the map method (use context.write to emit results)
         for(String word : value.toString().split(" ")) {
-            this.tmp_word.set(word);
+            this.tmp_word.set(word.replaceAll("[.,;\"\']", ""));
             context.write(this.tmp_word, this.lw);
         }
     }
