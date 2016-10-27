@@ -33,7 +33,7 @@ public class WordCount extends Configured implements Tool {
     public int run(String[] args) throws Exception {
 
         Configuration conf = this.getConf();
-        Job job = new Job(conf, "word-count-job-groupXY"); // define new job instead of null using conf
+        Job job = new Job(conf, "group26-word-count-job"); // define new job instead of null using conf
 
         // TODO: set job input format
         job.setInputFormatClass(TextInputFormat.class);
