@@ -113,20 +113,23 @@ class WCMapper extends Mapper<LongWritable, // TODO: change Object to input key 
 
 }
 
-class WCReducer extends Reducer<LongWritable, // TODO: change Object to input key type
-        Text, // TODO: change Object to input value type
+class WCReducer extends Reducer<Text, // TODO: change Object to input key type
+        LongWritable, // TODO: change Object to input value type
         Text, // TODO: change Object to output key type
         LongWritable> { // TODO: change Object to output value type
 
     @Override
-    protected void reduce(LongWritable key, // TODO: change Object to input key type
-                          Iterable<Text> values, // TODO: change Object to input value type
+    protected void reduce(Text key, // TODO: change Object to input key type
+                          Iterable<LongWritable> values, // TODO: change Object to input value type
                           Context context) throws IOException, InterruptedException {
 
         // TODO: implement the reduce method (use context.write to emit results)
+        LongWritable sum = new LongWritable(0);
 
-
-
+        for(LongWritable value : values) {
+            sum.set(sum.get() + 1);
+        }
+        context.write(key, sum);
 
     }
 }
