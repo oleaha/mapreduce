@@ -1,4 +1,4 @@
-package fr.eurecom.dsg.mapreduc;
+package fr.eurecom.dsg.mapreduce;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
