@@ -36,26 +36,41 @@ public class WordCount extends Configured implements Tool {
         Job job = new Job(conf, "group26-word-count-job"); // define new job instead of null using conf
 
         // TODO: set job input format
-        job.setInputFormatClass(TextInputFormat.class);
-        // TODO: set map class and the map output key and value classes
-        job.setMapperClass(WCMapper.class);
 
+        job.setInputFormatClass(TextInputFormat.class);
+
+        // TODO: set map class and the map output key and value classes
+
+        job.setMapperClass(WCMapper.class);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(LongWritable.class);
+
         // TODO: set reduce class and the reduce output key and value classes
+
         job.setReducerClass(WCReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(LongWritable.class);
+
         // TODO: set job output format
+
         job.setOutputFormatClass(TextOutputFormat.class);
+
         // TODO: add the input file as job input (from HDFS) to the variable
+
         FileInputFormat.addInputPath(job, this.inputPath);
+
         // TODO: set the output path for the job results (to HDFS) to the variable
+
         FileOutputFormat.setOutputPath(job, this.outputDir);
+
         // TODO: set the number of reducers using variable numberReducers
+
         job.setNumReduceTasks(this.numReducers);
+
         // TODO: set the jar class
+
         job.setJarByClass(WordCount.class);
+
 
         return job.waitForCompletion(true) ? 0 : 1; // this will execute the job
     }
