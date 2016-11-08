@@ -167,7 +167,7 @@ class StripesReducer
                     row.put(word, 0L);
                 }
 
-                row.put(word, val.get(word) + row.get(word));
+                row.put(word, row.get(word) + val.get(word));
             }
         }
 
