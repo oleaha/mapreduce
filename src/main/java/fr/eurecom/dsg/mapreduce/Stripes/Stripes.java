@@ -135,7 +135,7 @@ class StripesReducer
         extends Reducer<Text,   // TODO: change Object to input key type
         StringToIntMapWritable,   // TODO: change Object to input value type
         Text,   // TODO: change Object to output key type
-        StringToIntMapWritable> { // TODO: change Object to output value type
+        LongWritable> { // TODO: change Object to output value type
   @Override
   public void reduce(Text key, // TODO: change Object to input key type
                      Iterable<StringToIntMapWritable> values, // TODO: change Object to input value type
@@ -156,7 +156,9 @@ class StripesReducer
 
       }
 
-      context.write(key, row);
+      for (Text word: row.getKeys()) {
+        context.write(key, new LongWritable(row.get(word)));
+      }
     }
 
 
