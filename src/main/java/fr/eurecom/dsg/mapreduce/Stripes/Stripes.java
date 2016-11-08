@@ -112,12 +112,10 @@ class StripesMapper
           StringToIntMapWritable tempMap = new StringToIntMapWritable();
 
           for (String w2: words){
-              if (!w1.equals(w2)){
                 if(!tempMap.containsKey(new Text(w2))){
                   tempMap.put(new Text(w2), 0L);
                 }
                 tempMap.put(new Text(w2), tempMap.get(new Text(w2)) + 1);
-              }
           }
           context.write(new Text(w1), tempMap);
 
