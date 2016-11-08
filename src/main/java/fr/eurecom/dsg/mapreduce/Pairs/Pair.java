@@ -25,19 +25,39 @@ import org.apache.hadoop.util.ToolRunner;
 
 public class Pair extends Configured implements Tool {
 
-  public static class PairMapper 
-   extends Mapper<LongWritable, // TODO: change Object to input key type
-                  Text, // TODO: change Object to input value type
-                  TextPair, // TODO: change Object to output key type
-                  LongWritable> { // TODO: change Object to output value type
+  public static class PairMapper
+          extends Mapper<LongWritable, // TODO: change Object to input key type
+          Text, // TODO: change Object to input value type
+          TextPair, // TODO: change Object to output key type
+          LongWritable> { // TODO: change Object to output value type
     // TODO: implement mapper
+
+    private LongWritable lw = new LongWritable(1);
+    private  TextPair wordPair = new TextPair();
+
+    protected void map(LongWritable key, // TODO: change Object to input key type
+                       Text value, // TODO: change Object to input value type
+                       Context context) throws IOException, InterruptedException {
+
+      for (String first: value.toString().split(" ")){
+        for (String second: value.toString().split(" ")){
+          if (!first.equals(second)) {
+            this.wordPair.set(new Text(first), new Text(second));
+            context.write(this.wordPair, this.lw);
+          }
+        }
+      }
+
+
+    }
+
   }
 
   public static class PairReducer
-    extends Reducer<TextPair, // TODO: change Object to input key type
-                    LongWritable, // TODO: change Object to input value type
-                    TextPair, // TODO: change Object to output key type
-                    LongWritable> { // TODO: change Object to output value type
+          extends Reducer<TextPair, // TODO: change Object to input key type
+          LongWritable, // TODO: change Object to input value type
+          TextPair, // TODO: change Object to output key type
+          LongWritable> { // TODO: change Object to output value type
     // TODO: implement reducer
   }
 
@@ -54,14 +74,14 @@ public class Pair extends Configured implements Tool {
     this.inputPath = new Path(args[1]);
     this.outputDir = new Path(args[2]);
   }
-  
+
 
   @Override
   public int run(String[] args) throws Exception {
 
     Configuration conf = this.getConf();
     Job job = new Job(conf, "group26-pairs");  // TODO: define new job instead of null using conf e setting a name
-    
+
     // TODO: set job input format
 
     job.setInputFormatClass(TextInputFormat.class);
