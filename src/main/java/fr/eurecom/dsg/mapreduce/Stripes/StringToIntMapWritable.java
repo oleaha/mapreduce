@@ -17,11 +17,17 @@ public class StringToIntMapWritable implements Writable {
     HashMap<Text, Long> assAry = new HashMap<>();
 
 
+    public void put(String word, long value) {
+        assAry.put(new Text(word), value);
+    }
+
+    public long get(String key) {
+        return assAry.get(new Text(key));
+    }
+
     @Override
     public void readFields(DataInput in) throws IOException {
-
-        // TODO: implement deserialization
-
+        // Convert from what hadoop reads and to something that we can read according to our defined datastructure.
         assAry.clear();
 
         LongWritable lw = new LongWritable();
@@ -37,7 +43,8 @@ public class StringToIntMapWritable implements Writable {
 
     @Override
     public void write(DataOutput out) throws IOException {
-        // TODO: implement serialization
+
+        // Convert from human readable to hadoop readable code.
         LongWritable lw = new LongWritable();
         lw.set(this.assAry.size());
         lw.write(out);
