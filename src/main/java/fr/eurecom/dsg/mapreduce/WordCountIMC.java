@@ -107,15 +107,15 @@ class WCIMCMapper extends Mapper<LongWritable, // TODO: change Object to input k
 
 }
 
-class WCIMCReducer extends Reducer<Object, // TODO: change Object to input key
+class WCIMCReducer extends Reducer<Text, // TODO: change Object to input key
                                            // type
-                                   Object, // TODO: change Object to input value type
-                                   Object, // TODO: change Object to output key type
-                                   Object> { // TODO: change Object to output value type
+                                   LongWritable, // TODO: change Object to input value type
+                                   Text, // TODO: change Object to output key type
+                                   LongWritable> { // TODO: change Object to output value type
 
   @Override
-  protected void reduce(Object key, // TODO: change Object to input key type
-                        Iterable<Object> values, // TODO: change Object to input value type
+  protected void reduce(Text key, // TODO: change Object to input key type
+                        Iterable<LongWritable> values, // TODO: change Object to input value type
                         Context context) throws IOException, InterruptedException {
 
     // TODO: implement the reduce method (use context.write to emit results)
