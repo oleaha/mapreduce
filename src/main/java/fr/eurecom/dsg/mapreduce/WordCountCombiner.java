@@ -12,6 +12,10 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Mapper.Context;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -23,30 +27,57 @@ import org.apache.hadoop.util.ToolRunner;
  */
 public class WordCountCombiner extends Configured implements Tool {
 
-	private int numReducers;
+  private int numReducers;
   private Path inputPath;
   private Path outputDir;
 
   @Override
-	public int run(String[] args) throws Exception {
-    
-		Job job = null; // TODO: define new job instead of null using conf e setting a name
-		
-		// TODO: set job input format
-		// TODO: set map class and the map output key and value classes
-		
-		// * TODO: set the combiner class and the combiner output key and value classes
-		
-		// TODO: set reduce class and the reduce output key and value classes
-		// TODO: set job output format
-		// TODO: add the input file as job input (from HDFS)
-		// TODO: set the output path for the job results (to HDFS)
-		// TODO: set the number of reducers. This is optional and by default is 1
-		// TODO: set the jar class
+  public int run(String[] args) throws Exception {
 
-		return job.waitForCompletion(true) ? 0 : 1; // this will execute the job
-	}
-	
+    Job job = null; // TODO: define new job instead of null using conf e setting a name
+
+    // TODO: set job input format
+
+    job.setInputFormatClass(TextInputFormat.class);
+
+    // TODO: set map class and the map output key and value classes
+
+    job.setMapperClass(WCMapperCombiner.class);
+    job.setMapOutputKeyClass(Text.class);
+    job.setMapOutputValueClass(LongWritable.class);
+
+    // TODO: set reduce class and the reduce output key and value classes
+
+    job.setReducerClass(WCReducerCombiner.class);
+    job.setOutputKeyClass(Text.class);
+    job.setOutputValueClass(LongWritable.class);
+
+    // TODO: set job output format
+
+    job.setOutputFormatClass(TextOutputFormat.class);
+
+    // TODO: add the input file as job input (from HDFS) to the variable
+
+    FileInputFormat.addInputPath(job, this.inputPath);
+
+    // TODO: set the output path for the job results (to HDFS) to the variable
+
+    FileOutputFormat.setOutputPath(job, this.outputDir);
+
+    // TODO: set the number of reducers using variable numberReducers
+
+    job.setNumReduceTasks(this.numReducers);
+
+    // TODO: set the jar class
+
+    job.setJarByClass(WordCount.class);
+
+    // * TODO: set the combiner class and the combiner output key and value classes
+
+
+    return job.waitForCompletion(true) ? 0 : 1; // this will execute the job
+  }
+
   public WordCountCombiner (String[] args) {
     if (args.length != 3) {
       System.out.println("Usage: WordCountCombiner <num_reducers> <input_path> <output_path>");
@@ -56,7 +87,7 @@ public class WordCountCombiner extends Configured implements Tool {
     this.inputPath = new Path(args[1]);
     this.outputDir = new Path(args[2]);
   }
-  
+
   public static void main(String args[]) throws Exception {
     int res = ToolRunner.run(new Configuration(), new WordCountCombiner(args), args);
     System.exit(res);
@@ -70,7 +101,7 @@ class WCMapperCombiner extends Mapper<LongWritable, Text, Text, LongWritable> {
 
   @Override
   protected void map(LongWritable offset, Text text, Context context)
-      throws IOException, InterruptedException {
+          throws IOException, InterruptedException {
     StringTokenizer iter = new StringTokenizer(text.toString());
     while (iter.hasMoreTokens()) {
       this.word.set(iter.nextToken());
@@ -84,7 +115,7 @@ class WCReducerCombiner extends Reducer<Text, LongWritable, Text, LongWritable> 
 
   @Override
   protected void reduce(Text word, Iterable<LongWritable> values, Context context)
-      throws IOException, InterruptedException {
+          throws IOException, InterruptedException {
     long accumulator = 0;
     for (LongWritable value : values) {
       accumulator += value.get();

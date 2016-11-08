@@ -70,7 +70,7 @@ public class WordCountIMC extends Configured implements Tool {
 
     // TODO: set the jar class
 
-    job.setJarByClass(WordCount.class);
+    job.setJarByClass(WordCountIMC.class);
 
     return job.waitForCompletion(true) ? 0 : 1; // this will execute the job
   }
@@ -119,7 +119,6 @@ class WCIMCMapper extends Mapper<LongWritable, // TODO: change Object to input k
         }
         wordMap.put(tmp, wordMap.get(word) + 1);
     }
-
 
   }
 
