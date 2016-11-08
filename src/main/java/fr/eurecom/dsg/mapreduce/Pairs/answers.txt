@@ -19,6 +19,7 @@ Q3: Can you use the implemented reducers as Combiners?
 
 
 
+
 Q4: How many output bytes are spilled by the mappers to produce intermediate files? Keep this value in mind and compare to the "stripes" approach, next.
 
 
