@@ -21,7 +21,7 @@ import org.apache.hadoop.util.ToolRunner;
  * Word Count example of MapReduce job. Given a plain text in input, this job
  * counts how many occurrences of each word there are in that text and writes
  * the result on HDFS.
- * 
+ *
  */
 public class WordCountIMC extends Configured implements Tool {
 
@@ -31,7 +31,7 @@ public class WordCountIMC extends Configured implements Tool {
 
   @Override
   public int run(String[] args) throws Exception {
-    
+
     Job job = null; // TODO: define new job instead of null using conf e setting
                     // a name
 
@@ -41,13 +41,13 @@ public class WordCountIMC extends Configured implements Tool {
 
     // TODO: set map class and the map output key and value classes
 
-    job.setMapperClass(WCMapper.class);
+    job.setMapperClass(WCIMCMapper.class);
     job.setMapOutputKeyClass(Text.class);
     job.setMapOutputValueClass(LongWritable.class);
 
     // TODO: set reduce class and the reduce output key and value classes
 
-    job.setReducerClass(WCReducer.class);
+    job.setReducerClass(WCIMCReducer.class);
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(LongWritable.class);
 
