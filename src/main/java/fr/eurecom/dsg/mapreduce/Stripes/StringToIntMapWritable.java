@@ -64,4 +64,15 @@ public class StringToIntMapWritable implements Writable {
             lw.write(out);
         }
     }
+
+    public String toString() {
+
+        String test = "";
+
+        for(Text word : assAry.keySet()) {
+            test += " " + word + " " + assAry.get(word) + " | ";
+        }
+
+        return test;
+    }
 }
