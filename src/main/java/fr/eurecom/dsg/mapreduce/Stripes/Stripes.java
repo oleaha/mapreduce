@@ -116,8 +116,10 @@ class StripesMapper
         for (int j = i + 1; j < words.length; j++) {
 
           if(!(words[i].equals(words[j])) && words[j].length() > 0) {
-              tempMap.put(words[j], tempMap.get(words[j]) + 1);
-
+            if(!tempMap.containsKey(words[j])) {
+              tempMap.put(words[j], 0L);
+            }
+            tempMap.put(words[j], tempMap.get(words[j]) + 1);
           }
         }
       }
