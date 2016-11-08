@@ -21,16 +21,12 @@ import org.apache.hadoop.util.ToolRunner;
 
 public class Pair extends Configured implements Tool {
 
-    public static class PairMapper
-            extends Mapper<LongWritable, // TODO: change Object to input key type
-            Text, // TODO: change Object to input value type
-            TextPair, // TODO: change Object to output key type
-            LongWritable> { // TODO: change Object to output value type
-        // TODO: implement mapper
+    public static class PairMapper extends Mapper<LongWritable, Text, TextPair, LongWritable> {
 
         private LongWritable lw = new LongWritable(1);
         private  TextPair wordPair = new TextPair();
 
+        @Override
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
             String[] words = value.toString().split(" ");
