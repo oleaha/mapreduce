@@ -109,12 +109,18 @@ class WCIMCMapper extends Mapper<LongWritable, // TODO: change Object to input k
   protected void map(LongWritable key, // TODO: change Object to input key type
                      Text value, // TODO: change Object to input value type
                      Context context) throws IOException, InterruptedException {
-
-
-
-
     // * TODO: implement the map method (use context.write to emit results). Use
     // the in-memory combiner technique
+
+    for(String word : value.toString().split(" ")){
+        String tmp = word.replaceAll("[.,;\"\']", "");
+        if (!wordMap.containsKey(tmp)){
+          wordMap.put(tmp, 0L);
+        }
+        wordMap.put(tmp, wordMap.get(word) + 1);
+    }
+
+
   }
 
   @Override

@@ -110,7 +110,6 @@ class WCMapper extends Mapper<LongWritable, // TODO: change Object to input key 
             context.write(this.tmp_word, this.lw);
         }
     }
-
 }
 
 class WCReducer extends Reducer<Text, // TODO: change Object to input key type
