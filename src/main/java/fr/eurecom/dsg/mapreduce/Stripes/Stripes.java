@@ -106,17 +106,18 @@ class StripesMapper
         // TODO: implement map method
 
         String[] words = value.toString().split(" ");
-        System.out.println(words);
 
 
         for (String w1: words){
           StringToIntMapWritable tempMap = new StringToIntMapWritable();
 
           for (String w2: words){
-//                if(!tempMap.containsKey(new Text(w2))){
-//                  tempMap.put(new Text(w2), 0L);
-//                }
-                tempMap.put(new Text(w2), 1);
+              if (!w1.equals(w2)) {
+                  if (!tempMap.containsKey(new Text(w2))) {
+                      tempMap.put(new Text(w2), 0L);
+                  }
+                  tempMap.put(new Text(w2), 1);
+              }
           }
           context.write(new Text(w1), tempMap);
 
