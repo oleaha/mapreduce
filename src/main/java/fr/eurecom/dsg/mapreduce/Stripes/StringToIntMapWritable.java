@@ -16,6 +16,7 @@ public class StringToIntMapWritable implements Writable {
     // TODO: add an internal field that is the real associative array
     HashMap<Text, Long> assAry = new HashMap<>();
 
+
     @Override
     public void readFields(DataInput in) throws IOException {
 
