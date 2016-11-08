@@ -1,6 +1,7 @@
 package fr.eurecom.dsg.mapreduce;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -96,13 +97,33 @@ class WCIMCMapper extends Mapper<LongWritable, // TODO: change Object to input k
                                  Text, // TODO: change Object to output key type
                                  LongWritable> { // TODO: change Object to output value type
 
+  private HashMap<String, Long> wordMap = null;
+
+  @Override
+  protected void setup(Context context) throws IOException, InterruptedException {
+    super.setup(context);
+    wordMap = new HashMap<>();
+  }
+
   @Override
   protected void map(LongWritable key, // TODO: change Object to input key type
                      Text value, // TODO: change Object to input value type
                      Context context) throws IOException, InterruptedException {
 
+
+
+
     // * TODO: implement the map method (use context.write to emit results). Use
     // the in-memory combiner technique
+  }
+
+  @Override
+    protected void cleanup(Context context) throws IOException, InterruptedException {
+      super.setup(context);
+
+      for (String word : wordMap.keySet()) {
+          context.write(new Text(word), new LongWritable(wordMap.get(word)));
+      }
   }
 
 }
