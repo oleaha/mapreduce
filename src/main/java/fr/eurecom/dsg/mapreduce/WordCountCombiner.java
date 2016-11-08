@@ -34,7 +34,8 @@ public class WordCountCombiner extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
 
-    Job job = null; // TODO: define new job instead of null using conf e setting a name
+    Configuration conf = this.getConf();
+    Job job = new Job(conf, "group26-wordCountCombiner-job");// TODO: define new job instead of null using conf e setting a name
 
     // TODO: set job input format
 

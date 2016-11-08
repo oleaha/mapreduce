@@ -33,7 +33,8 @@ public class WordCountIMC extends Configured implements Tool {
   @Override
   public int run(String[] args) throws Exception {
 
-    Job job = null; // TODO: define new job instead of null using conf e setting
+    Configuration conf = this.getConf();
+    Job job = new Job(conf, "group26-wordCountIMC-job"); // TODO: define new job instead of null using conf e setting
                     // a name
 
     // TODO: set job input format
