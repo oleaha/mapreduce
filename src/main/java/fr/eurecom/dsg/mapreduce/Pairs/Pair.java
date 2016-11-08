@@ -96,7 +96,7 @@ public class Pair extends Configured implements Tool {
 
     // TODO: set the jar class
 
-    job.setJarByClass(WordCount.class);
+    job.setJarByClass(Pair.class);
 
     return job.waitForCompletion(true) ? 0 : 1;
   }
