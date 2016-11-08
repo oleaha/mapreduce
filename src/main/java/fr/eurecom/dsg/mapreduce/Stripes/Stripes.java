@@ -108,24 +108,40 @@ class StripesMapper
         String[] words = value.toString().split(" ");
 
 
-        for (int i = 0; i < words.length - 1; i++) {
+        for (String w1: words){
+          StringToIntMapWritable tempMap = new StringToIntMapWritable();
 
-            StringToIntMapWritable tempMap = new StringToIntMapWritable();
-
-            if(words[i].length() != 0) {
-                for (int j = i + 1; j < words.length; j++) {
-
-                    if(!(words[i].equals(words[j])) && words[j].length() > 0) {
-                        if(!tempMap.containsKey(new Text(words[j]))) {
-                            tempMap.put(new Text(words[j]), 0L);
-                        }
-                        tempMap.put(new Text(words[j]), tempMap.get(new Text(words[j])) + 1);
-                    }
+          for (String w2: words){
+              if (!w1.equals(w2)){
+                if(!tempMap.containsKey(new Text(w2))){
+                  tempMap.put(new Text(w2), 0L);
                 }
-            }
+                tempMap.put(new Text(w2), tempMap.get(new Text(w2)) + 1);
+              }
+          }
+          context.write(new Text(w1), tempMap);
 
-            context.write(new Text(words[i]), tempMap);
         }
+
+
+//        for (int i = 0; i < words.length - 1; i++) {
+//
+//            StringToIntMapWritable tempMap = new StringToIntMapWritable();
+//
+//            if(words[i].length() != 0) {
+//                for (int j = i + 1; j < words.length; j++) {
+//
+//                    if(!(words[i].equals(words[j])) && words[j].length() > 0) {
+//                        if(!tempMap.containsKey(new Text(words[j]))) {
+//                            tempMap.put(new Text(words[j]), 0L);
+//                        }
+//                        tempMap.put(new Text(words[j]), tempMap.get(new Text(words[j])) + 1);
+//                    }
+//                }
+//            }
+//
+//            context.write(new Text(words[i]), tempMap);
+//        }
 
 
     }
@@ -150,7 +166,8 @@ class StripesReducer
                 if (!row.containsKey(word)){
                     row.put(word, 0L);
                 }
-                row.put(word, row.get(word) + 1);
+
+                row.put(word, val.get(word) + row.get(word));
             }
         }
 
