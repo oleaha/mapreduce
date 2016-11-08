@@ -1,6 +1,7 @@
 package fr.eurecom.dsg.mapreduce.Stripes;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import fr.eurecom.dsg.mapreduce.Pairs.Pair;
 import fr.eurecom.dsg.mapreduce.Pairs.TextPair;
@@ -94,6 +95,8 @@ class StripesMapper
         Text,   // TODO: change Object to output key type
         StringToIntMapWritable> { // TODO: change Object to output value type
 
+  private LongWritable lw = new LongWritable(1);
+
   @Override
   public void map(LongWritable key, // TODO: change Object to input key type
                   Text value, // TODO: change Object to input value type
@@ -101,6 +104,28 @@ class StripesMapper
           throws java.io.IOException, InterruptedException {
 
     // TODO: implement map method
+
+    String[] words = value.toString().split(" ");
+
+
+    for (int i = 0; i < words.length - 1; i++) {
+
+      HashMap<Text, Long> tempMap = new HashMap<>();
+
+      if(words[i].length() != 0) {
+        for (int j = i + 1; j < words.length; j++) {
+
+          if(!(words[i].equals(words[j])) && words[j].length() > 0) {
+              tempMap.put( new Text(words[j]), tempMap.get(words[j]) + 1);
+
+          }
+        }
+      }
+
+      context.write(new Text(words[i]), new StringToIntMapWritable(tempMap));
+    }
+
+
   }
 }
 
