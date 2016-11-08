@@ -34,6 +34,10 @@ public class StringToIntMapWritable implements Writable {
       return assAry.keySet();
     }
 
+    public String toString(){
+      return assAry.toString();
+    }
+
     @Override
     public void readFields(DataInput in) throws IOException {
         // Convert from what hadoop reads and to something that we can read according to our defined datastructure.
@@ -65,14 +69,14 @@ public class StringToIntMapWritable implements Writable {
         }
     }
 
-    public String toString() {
-
-        String test = "";
-
-        for(Text word : assAry.keySet()) {
-            test += " " + word + " " + assAry.get(word) + " | ";
-        }
-
-        return test;
-    }
+//    public String toString() {
+//
+//        String test = "";
+//
+//        for(Text word : assAry.keySet()) {
+//            test += " " + word + " " + assAry.get(word) + " | ";
+//        }
+//
+//        return test;
+//    }
 }
