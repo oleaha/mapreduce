@@ -25,6 +25,10 @@ public class StringToIntMapWritable implements Writable {
         return assAry.get(new Text(key));
     }
 
+    public boolean containsKey(String key) {
+        return assAry.containsKey(new Text(key));
+    }
+
     @Override
     public void readFields(DataInput in) throws IOException {
         // Convert from what hadoop reads and to something that we can read according to our defined datastructure.
