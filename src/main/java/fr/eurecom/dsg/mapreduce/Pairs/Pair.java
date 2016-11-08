@@ -3,6 +3,9 @@ package fr.eurecom.dsg.mapreduce.Pairs;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+import fr.eurecom.dsg.mapreduce.WordCount.WCMapper;
+import fr.eurecom.dsg.mapreduce.WordCount.WCReducer;
+import fr.eurecom.dsg.mapreduce.WordCount.WordCount;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -12,6 +15,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
@@ -22,18 +26,18 @@ import org.apache.hadoop.util.ToolRunner;
 public class Pair extends Configured implements Tool {
 
   public static class PairMapper 
-   extends Mapper<Object, // TODO: change Object to input key type
-                  Object, // TODO: change Object to input value type
-                  Object, // TODO: change Object to output key type
-                  Object> { // TODO: change Object to output value type
+   extends Mapper<LongWritable, // TODO: change Object to input key type
+                  Text, // TODO: change Object to input value type
+                  TextPair, // TODO: change Object to output key type
+                  LongWritable> { // TODO: change Object to output value type
     // TODO: implement mapper
   }
 
   public static class PairReducer
-    extends Reducer<Object, // TODO: change Object to input key type
-                    Object, // TODO: change Object to input value type
-                    Object, // TODO: change Object to output key type
-                    Object> { // TODO: change Object to output value type
+    extends Reducer<TextPair, // TODO: change Object to input key type
+                    LongWritable, // TODO: change Object to input value type
+                    TextPair, // TODO: change Object to output key type
+                    LongWritable> { // TODO: change Object to output value type
     // TODO: implement reducer
   }
 
@@ -56,16 +60,43 @@ public class Pair extends Configured implements Tool {
   public int run(String[] args) throws Exception {
 
     Configuration conf = this.getConf();
-    Job job = null;  // TODO: define new job instead of null using conf e setting a name
+    Job job = new Job(conf, "group26-pairs");  // TODO: define new job instead of null using conf e setting a name
     
     // TODO: set job input format
+
+    job.setInputFormatClass(TextInputFormat.class);
+
     // TODO: set map class and the map output key and value classes
+
+    job.setMapperClass(PairMapper.class);
+    job.setMapOutputKeyClass(TextPair.class);
+    job.setMapOutputValueClass(LongWritable.class);
+
     // TODO: set reduce class and the reduce output key and value classes
+
+    job.setReducerClass(PairReducer.class);
+    job.setOutputKeyClass(TextPair.class);
+    job.setOutputValueClass(LongWritable.class);
+
     // TODO: set job output format
+
+    job.setOutputFormatClass(TextOutputFormat.class);
+
     // TODO: add the input file as job input (from HDFS) to the variable inputFile
+
+    FileInputFormat.addInputPath(job, this.inputPath);
+
     // TODO: set the output path for the job results (to HDFS) to the variable outputPath
+
+    FileOutputFormat.setOutputPath(job, this.outputDir);
+
     // TODO: set the number of reducers using variable numberReducers
+
+    job.setNumReduceTasks(this.numReducers);
+
     // TODO: set the jar class
+
+    job.setJarByClass(WordCount.class);
 
     return job.waitForCompletion(true) ? 0 : 1;
   }
