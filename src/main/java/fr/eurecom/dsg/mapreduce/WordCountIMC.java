@@ -119,5 +119,12 @@ class WCIMCReducer extends Reducer<Text, // TODO: change Object to input key
                         Context context) throws IOException, InterruptedException {
 
     // TODO: implement the reduce method (use context.write to emit results)
+    LongWritable sum = new LongWritable(0);
+
+    for(LongWritable value : values) {
+      sum.set(sum.get() + 1);
+    }
+    context.write(key, sum);
+
   }
 }
