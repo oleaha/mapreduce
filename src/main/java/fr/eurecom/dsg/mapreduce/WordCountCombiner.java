@@ -73,6 +73,7 @@ public class WordCountCombiner extends Configured implements Tool {
     job.setJarByClass(WordCount.class);
 
     // * TODO: set the combiner class and the combiner output key and value classes
+    job.setCombinerClass(WCReducerCombiner.class);
 
 
     return job.waitForCompletion(true) ? 0 : 1; // this will execute the job
