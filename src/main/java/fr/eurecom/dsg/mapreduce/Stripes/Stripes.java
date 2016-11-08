@@ -23,70 +23,70 @@ import org.apache.hadoop.util.ToolRunner;
 
 public class Stripes extends Configured implements Tool {
 
-  private int numReducers;
-  private Path inputPath;
-  private Path outputDir;
+    private int numReducers;
+    private Path inputPath;
+    private Path outputDir;
 
-  @Override
-  public int run(String[] args) throws Exception {
+    @Override
+    public int run(String[] args) throws Exception {
 
-    Configuration conf = this.getConf();
-    Job job = new Job(conf, "group26-Stripes");  // TODO: define new job instead of null using conf e setting a name
+        Configuration conf = this.getConf();
+        Job job = new Job(conf, "group26-Stripes");  // TODO: define new job instead of null using conf e setting a name
 
-    // TODO: set job input format
+        // TODO: set job input format
 
-    job.setInputFormatClass(TextInputFormat.class);
+        job.setInputFormatClass(TextInputFormat.class);
 
-    // TODO: set map class and the map output key and value classes
+        // TODO: set map class and the map output key and value classes
 
-    job.setMapperClass(StripesMapper.class);
-    job.setMapOutputKeyClass(Text.class);
-    job.setMapOutputValueClass(StringToIntMapWritable.class);
+        job.setMapperClass(StripesMapper.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(StringToIntMapWritable.class);
 
-    // TODO: set reduce class and the reduce output key and value classes
+        // TODO: set reduce class and the reduce output key and value classes
 
-    job.setReducerClass(StripesReducer.class);
-    job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(LongWritable.class);
+        job.setReducerClass(StripesReducer.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(StringToIntMapWritable.class);
 
-    // TODO: set job output format
+        // TODO: set job output format
 
-    job.setOutputFormatClass(TextOutputFormat.class);
+        job.setOutputFormatClass(TextOutputFormat.class);
 
-    // TODO: add the input file as job input (from HDFS) to the variable inputFile
+        // TODO: add the input file as job input (from HDFS) to the variable inputFile
 
-    FileInputFormat.addInputPath(job, this.inputPath);
+        FileInputFormat.addInputPath(job, this.inputPath);
 
-    // TODO: set the output path for the job results (to HDFS) to the variable outputPath
+        // TODO: set the output path for the job results (to HDFS) to the variable outputPath
 
-    FileOutputFormat.setOutputPath(job, this.outputDir);
+        FileOutputFormat.setOutputPath(job, this.outputDir);
 
-    // TODO: set the number of reducers using variable numberReducers
+        // TODO: set the number of reducers using variable numberReducers
 
-    job.setNumReduceTasks(this.numReducers);
+        job.setNumReduceTasks(this.numReducers);
 
-    // TODO: set the jar class
+        // TODO: set the jar class
 
-    job.setJarByClass(Stripes.class);
+        job.setJarByClass(Stripes.class);
 
 
-    return job.waitForCompletion(true) ? 0 : 1;
-  }
-
-  public Stripes (String[] args) {
-    if (args.length != 3) {
-      System.out.println("Usage: Stripes <num_reducers> <input_path> <output_path>");
-      System.exit(0);
+        return job.waitForCompletion(true) ? 0 : 1;
     }
-    this.numReducers = Integer.parseInt(args[0]);
-    this.inputPath = new Path(args[1]);
-    this.outputDir = new Path(args[2]);
-  }
 
-  public static void main(String[] args) throws Exception {
-    int res = ToolRunner.run(new Configuration(), new Stripes(args), args);
-    System.exit(res);
-  }
+    public Stripes (String[] args) {
+        if (args.length != 3) {
+            System.out.println("Usage: Stripes <num_reducers> <input_path> <output_path>");
+            System.exit(0);
+        }
+        this.numReducers = Integer.parseInt(args[0]);
+        this.inputPath = new Path(args[1]);
+        this.outputDir = new Path(args[2]);
+    }
+
+    public static void main(String[] args) throws Exception {
+        int res = ToolRunner.run(new Configuration(), new Stripes(args), args);
+        System.exit(res);
+    }
 }
 
 class StripesMapper
@@ -95,71 +95,66 @@ class StripesMapper
         Text,   // TODO: change Object to output key type
         StringToIntMapWritable> { // TODO: change Object to output value type
 
-  private LongWritable lw = new LongWritable(1);
+    private LongWritable lw = new LongWritable(1);
 
-  @Override
-  public void map(LongWritable key, // TODO: change Object to input key type
-                  Text value, // TODO: change Object to input value type
-                  Context context)
-          throws java.io.IOException, InterruptedException {
+    @Override
+    public void map(LongWritable key, // TODO: change Object to input key type
+                    Text value, // TODO: change Object to input value type
+                    Context context)
+            throws java.io.IOException, InterruptedException {
 
-    // TODO: implement map method
+        // TODO: implement map method
 
-    String[] words = value.toString().split(" ");
+        String[] words = value.toString().split(" ");
 
 
-    for (int i = 0; i < words.length - 1; i++) {
+        for (int i = 0; i < words.length - 1; i++) {
 
-      StringToIntMapWritable tempMap = new StringToIntMapWritable();
+            StringToIntMapWritable tempMap = new StringToIntMapWritable();
 
-      if(words[i].length() != 0) {
-        for (int j = i + 1; j < words.length; j++) {
+            if(words[i].length() != 0) {
+                for (int j = i + 1; j < words.length; j++) {
 
-          if(!(words[i].equals(words[j])) && words[j].length() > 0) {
-            if(!tempMap.containsKey(new Text(words[j]))) {
-              tempMap.put(new Text(words[j]), 0L);
+                    if(!(words[i].equals(words[j])) && words[j].length() > 0) {
+                        if(!tempMap.containsKey(new Text(words[j]))) {
+                            tempMap.put(new Text(words[j]), 0L);
+                        }
+                        tempMap.put(new Text(words[j]), tempMap.get(new Text(words[j])) + 1);
+                    }
+                }
             }
-            tempMap.put(new Text(words[j]), tempMap.get(new Text(words[j])) + 1);
-          }
+
+            context.write(new Text(words[i]), tempMap);
         }
-      }
 
-      context.write(new Text(words[i]), tempMap);
+
     }
-
-
-  }
 }
 
 class StripesReducer
         extends Reducer<Text,   // TODO: change Object to input key type
         StringToIntMapWritable,   // TODO: change Object to input value type
         Text,   // TODO: change Object to output key type
-        LongWritable> { // TODO: change Object to output value type
-  @Override
-  public void reduce(Text key, // TODO: change Object to input key type
-                     Iterable<StringToIntMapWritable> values, // TODO: change Object to input value type
-                     Context context) throws IOException, InterruptedException {
+        StringToIntMapWritable> { // TODO: change Object to output value type
+    @Override
+    public void reduce(Text key, // TODO: change Object to input key type
+                       Iterable<StringToIntMapWritable> values, // TODO: change Object to input value type
+                       Context context) throws IOException, InterruptedException {
 
-    // TODO: implement the reduce method
-
-    StringToIntMapWritable row = new StringToIntMapWritable();
-
-    for(StringToIntMapWritable val: values){
+        // TODO: implement the reduce method
+        StringToIntMapWritable row = new StringToIntMapWritable();
 
 
-      for (Text word: val.getKeys()){
-        if (!row.containsKey(word)){
-          row.put(word, 0L);
+        for(StringToIntMapWritable val: values){
+            for (Text word: val.getKeys()){
+                if (!row.containsKey(word)){
+                    row.put(word, 0L);
+                }
+                row.put(word, row.get(word) + 1);
+            }
         }
-        row.put(word, row.get(word) + 1);
 
-      }
+        context.write(key, row);
+
     }
-
-    for (Text word: row.getKeys()) {
-      context.write(key, new LongWritable(row.get(word)));
-    }
-
-  }
 }
