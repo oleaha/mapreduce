@@ -116,10 +116,10 @@ class StripesMapper
         for (int j = i + 1; j < words.length; j++) {
 
           if(!(words[i].equals(words[j])) && words[j].length() > 0) {
-            if(!tempMap.containsKey(words[j])) {
-              tempMap.put(words[j], 0L);
+            if(!tempMap.containsKey(new Text(words[j]))) {
+              tempMap.put(new Text(words[j]), 0L);
             }
-            tempMap.put(words[j], tempMap.get(words[j]) + 1);
+            tempMap.put(new Text(words[j]), tempMap.get(new Text(words[j])) + 1);
           }
         }
       }
@@ -144,6 +144,20 @@ class StripesReducer
     // TODO: implement the reduce method
 
 
+
+    for(StringToIntMapWritable val: values){
+      StringToIntMapWritable row = new StringToIntMapWritable();
+
+      for (Text word: val.getKeys()){
+        if (!row.containsKey(word)){
+          row.put(word, 0L);
+        }
+        row.put(word, row.get(word) + 1);
+
+      }
+
+      context.write(key, row);
+    }
 
 
   }
