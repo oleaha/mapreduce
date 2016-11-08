@@ -83,7 +83,7 @@ public class WordCountIMC extends Configured implements Tool {
     this.inputPath = new Path(args[1]);
     this.outputDir = new Path(args[2]);
   }
-  
+
   public static void main(String args[]) throws Exception {
     int res = ToolRunner.run(new Configuration(), new WordCountIMC(args), args);
     System.exit(res);
@@ -97,8 +97,8 @@ class WCIMCMapper extends Mapper<LongWritable, // TODO: change Object to input k
                                  LongWritable> { // TODO: change Object to output value type
 
   @Override
-  protected void map(Object key, // TODO: change Object to input key type
-                     Object value, // TODO: change Object to input value type
+  protected void map(LongWritable key, // TODO: change Object to input key type
+                     Text value, // TODO: change Object to input value type
                      Context context) throws IOException, InterruptedException {
 
     // * TODO: implement the map method (use context.write to emit results). Use
