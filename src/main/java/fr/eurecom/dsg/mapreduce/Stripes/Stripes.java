@@ -143,10 +143,10 @@ class StripesReducer
 
     // TODO: implement the reduce method
 
-
+    StringToIntMapWritable row = new StringToIntMapWritable();
 
     for(StringToIntMapWritable val: values){
-      StringToIntMapWritable row = new StringToIntMapWritable();
+
 
       for (Text word: val.getKeys()){
         if (!row.containsKey(word)){
@@ -155,12 +155,11 @@ class StripesReducer
         row.put(word, row.get(word) + 1);
 
       }
-
-      for (Text word: row.getKeys()) {
-        context.write(key, new LongWritable(row.get(word)));
-      }
     }
 
+    for (Text word: row.getKeys()) {
+      context.write(key, new LongWritable(row.get(word)));
+    }
 
   }
 }
