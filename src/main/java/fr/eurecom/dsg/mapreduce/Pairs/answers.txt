@@ -1,0 +1,25 @@
+Q1: How does the number of reducer influence the behavior of the Pairs approach?
+
+If you increase the number of reducers it means that every reducer goes through a smaller amount of data.
+By increasing the number you can also achieve a higher leveler of parallelism.
+With higher parallelism and less work for the reducers the total processing time can decrease.
+
+
+
+In this case the data is more evenly distributed across different keys, so adding more reducers will in general improve the global performance, adding more parallelism. Anyway changing the number of reducers does not change the big amount of data that has to be sent across the network
+
+Q2: Why does TextPair need to be Comparable?
+
+In order to sort the TextPair it needs to be Comparable
+
+
+
+Q3: Can you use the implemented reducers as Combiners?
+
+
+
+
+Q4: How many output bytes are spilled by the mappers to produce intermediate files? Keep this value in mind and compare to the "stripes" approach, next.
+
+
+Increasing the number of reducers can improve the parallelism, so every reducer has to process a smaller amount of data and can do it in a shorter time (anyway we still need to take into account the time needed to send the data through the network and the balance between different partitions, as ideally every reducer should process the same amount of data). In this cluster we can execute at most 20 reducers at the time. The number of reducers depends also on the amount of different keys they have as input (is useless to execute more reducers than keys).

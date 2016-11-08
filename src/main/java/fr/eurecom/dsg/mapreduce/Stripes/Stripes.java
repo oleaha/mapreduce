@@ -41,13 +41,13 @@ public class Stripes extends Configured implements Tool {
 
     job.setMapperClass(StripesMapper.class);
     job.setMapOutputKeyClass(Text.class);
-    job.setMapOutputValueClass(LongWritable.class);
+    job.setMapOutputValueClass(StringToIntMapWritable.class);
 
     // TODO: set reduce class and the reduce output key and value classes
 
     job.setReducerClass(StripesReducer.class);
     job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(LongWritable.class);
+    job.setOutputValueClass(StringToIntMapWritable.class);
 
     // TODO: set job output format
 
@@ -110,19 +110,21 @@ class StripesMapper
 
     for (int i = 0; i < words.length - 1; i++) {
 
-      HashMap<Text, Long> tempMap = new HashMap<>();
+      StringToIntMapWritable tempMap = new StringToIntMapWritable();
 
       if(words[i].length() != 0) {
         for (int j = i + 1; j < words.length; j++) {
 
           if(!(words[i].equals(words[j])) && words[j].length() > 0) {
-              tempMap.put( new Text(words[j]), tempMap.get(words[j]) + 1);
-
+            if(!tempMap.containsKey(new Text(words[j]))) {
+              tempMap.put(new Text(words[j]), 0L);
+            }
+            tempMap.put(new Text(words[j]), tempMap.get(new Text(words[j])) + 1);
           }
         }
       }
 
-      context.write(new Text(words[i]), new StringToIntMapWritable(tempMap));
+      context.write(new Text(words[i]), tempMap);
     }
 
 
@@ -140,5 +142,23 @@ class StripesReducer
                      Context context) throws IOException, InterruptedException {
 
     // TODO: implement the reduce method
+
+
+
+    for(StringToIntMapWritable val: values){
+      StringToIntMapWritable row = new StringToIntMapWritable();
+
+      for (Text word: val.getKeys()){
+        if (!row.containsKey(word)){
+          row.put(word, 0L);
+        }
+        row.put(word, row.get(word) + 1);
+
+      }
+
+      context.write(key, row);
+    }
+
+
   }
 }

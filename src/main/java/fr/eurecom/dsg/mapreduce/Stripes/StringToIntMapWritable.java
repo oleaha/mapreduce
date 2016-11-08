@@ -3,6 +3,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
@@ -17,12 +18,20 @@ public class StringToIntMapWritable implements Writable {
     HashMap<Text, Long> assAry = new HashMap<>();
 
 
-    public void put(String word, long value) {
-        assAry.put(new Text(word), value);
+    public void put(Text word, long value) {
+        assAry.put(word, value);
     }
 
-    public long get(String key) {
-        return assAry.get(new Text(key));
+    public long get(Text key) {
+        return assAry.get(key);
+    }
+
+    public boolean containsKey(Text key) {
+        return assAry.containsKey(key);
+    }
+
+    public Set<Text> getKeys(){
+      return assAry.keySet();
     }
 
     @Override
