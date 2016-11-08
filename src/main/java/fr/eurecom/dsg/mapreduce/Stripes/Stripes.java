@@ -110,19 +110,19 @@ class StripesMapper
 
     for (int i = 0; i < words.length - 1; i++) {
 
-      HashMap<Text, Long> tempMap = new HashMap<>();
+      StringToIntMapWritable tempMap = new StringToIntMapWritable();
 
       if(words[i].length() != 0) {
         for (int j = i + 1; j < words.length; j++) {
 
           if(!(words[i].equals(words[j])) && words[j].length() > 0) {
-              tempMap.put( new Text(words[j]), tempMap.get(words[j]) + 1);
+              tempMap.put(words[j], tempMap.get(words[j]) + 1);
 
           }
         }
       }
 
-      context.write(new Text(words[i]), new StringToIntMapWritable(tempMap));
+      context.write(new Text(words[i]), tempMap);
     }
 
 
@@ -140,5 +140,9 @@ class StripesReducer
                      Context context) throws IOException, InterruptedException {
 
     // TODO: implement the reduce method
+
+
+
+
   }
 }
