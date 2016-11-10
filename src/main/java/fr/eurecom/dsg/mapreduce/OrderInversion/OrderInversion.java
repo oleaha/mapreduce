@@ -115,7 +115,7 @@ public class OrderInversion extends Configured implements Tool {
     public int run(String[] args) throws Exception {
         Configuration conf = this.getConf();
 
-        Job job = null;  // TODO: define new job instead of null using conf e setting a name
+        Job job = new Job(conf, "group26-OrderInversion");  // TODO: define new job instead of null using conf e setting a name
 
         // TODO: set job input format
 
