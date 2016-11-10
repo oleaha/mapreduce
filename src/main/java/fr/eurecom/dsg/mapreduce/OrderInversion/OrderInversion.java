@@ -94,8 +94,8 @@ public class OrderInversion extends Configured implements Tool {
             }
 
             // The pairs are storted and the pair with asterisk should be first
-            if(pair.getSecond().equals(new Text(ASTERISK))) {
-                count = result + 1;
+            if(pair.getSecond().toString().equals(new Text(ASTERISK))) {
+                count = result;
             } else {
                 avg.set(result / count);
                 context.write(pair, avg);
