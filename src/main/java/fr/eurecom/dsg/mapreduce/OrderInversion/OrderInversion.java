@@ -70,9 +70,7 @@ public class OrderInversion extends Configured implements Tool {
                             context.write(new TextPair(words[i], words[j]), new IntWritable(1));
                             count.set(count.get() + 1);
                         }
-
                     }
-
                 }
                 context.write(new TextPair(words[i], ASTERISK), count);
             }
@@ -96,7 +94,7 @@ public class OrderInversion extends Configured implements Tool {
             }
 
             // The pairs are storted and the pair with asterisk should be first
-            if(pair.getSecond().equals(new Text(ASTERISK))) {
+            if(pair.getSecond().equals(new Text(ASTERISK)) || pair.getFirst().equals(new Text(ASTERISK))) {
                 count = result;
             } else {
                 avg.set(result / count);
