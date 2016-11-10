@@ -27,6 +27,7 @@ import java.io.IOException;
 public class OrderInversion extends Configured implements Tool {
 
     private final static String ASTERISK = "\0";
+    private static DoubleWritable marginal = new DoubleWritable();
 
     public static class PartitionerTextPair extends
             Partitioner<TextPair, IntWritable> {
@@ -80,29 +81,23 @@ public class OrderInversion extends Configured implements Tool {
     public static class PairReducer extends
             Reducer<TextPair, IntWritable, TextPair, DoubleWritable> {
 
-
-        long count = 0L;
-        DoubleWritable avg = new DoubleWritable();
-
         @Override
         public void reduce(TextPair pair, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
 
-            // Get the count for each word
-            long result = 0L;
-            for(IntWritable value : values) {
-                result += (long) value.get();
-            }
+            DoubleWritable sum = new DoubleWritable(0);
 
-            // The pairs are storted and the pair with asterisk should be first
-            if(pair.getSecond().equals(new Text(ASTERISK))) {
-                count = result + 1;
+            if(pair.getSecond().toString().equals(ASTERISK)) {
+                marginal.set(0);
+
+                for(IntWritable value : values) {
+                    marginal.set(marginal.get() + value.get());
+                }
             } else {
-                avg.set(result / count);
-                context.write(pair, avg);
+                for (IntWritable value : values) {
+                    sum.set(sum.get() + value.get());
+                }
+                context.write(pair, new DoubleWritable(sum.get() / marginal.get()));
             }
-
-        }
-
     }
 
     private int numReducers;
