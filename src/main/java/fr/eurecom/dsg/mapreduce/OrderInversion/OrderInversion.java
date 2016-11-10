@@ -86,10 +86,10 @@ public class OrderInversion extends Configured implements Tool {
 
             DoubleWritable sum = new DoubleWritable(0);
 
-            if(pair.getSecond().toString().equals(ASTERISK)) {
+            if (pair.getSecond().toString().equals(ASTERISK)) {
                 marginal.set(0);
 
-                for(IntWritable value : values) {
+                for (IntWritable value : values) {
                     marginal.set(marginal.get() + value.get());
                 }
             } else {
@@ -98,6 +98,7 @@ public class OrderInversion extends Configured implements Tool {
                 }
                 context.write(pair, new DoubleWritable(sum.get() / marginal.get()));
             }
+        }
     }
 
     private int numReducers;
