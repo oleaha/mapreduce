@@ -35,7 +35,7 @@ public class OrderInversion extends Configured implements Tool {
                                 int numPartitions) {
             // TODO: implement getPartition such that pairs with the same first element
             //       will go to the same reducer. You can use toUnsighed as utility.
-            return 0;
+            return toUnsigned(key.getFirst().hashCode()) % numPartitions;
         }
 
         /**
