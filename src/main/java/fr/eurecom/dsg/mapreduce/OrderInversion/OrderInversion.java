@@ -1,6 +1,7 @@
 package fr.eurecom.dsg.mapreduce.OrderInversion;
 
 import fr.eurecom.dsg.mapreduce.Pairs.TextPair;
+import org.apache.commons.collections.IterableMap;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -78,6 +79,29 @@ public class OrderInversion extends Configured implements Tool {
 
     public static class PairReducer extends
             Reducer<TextPair, IntWritable, TextPair, DoubleWritable> {
+
+
+        long count = 0L;
+        DoubleWritable avg = new DoubleWritable();
+
+        public void reduce(TextPair pair, Iterable<LongWritable> values, Context context) throws IOException, InterruptedException {
+
+
+            // Get the count for each word
+            long result = 0L;
+            for(LongWritable value : values) {
+                result += value.get();
+            }
+
+            // The pairs are storted and the pair with asterisk should be first
+            if(pair.getSecond().equals(new Text(ASTERISK))) {
+                count = result;
+            } else {
+                avg.set(result / count);
+                context.write(pair, avg);
+            }
+
+        }
 
     }
 
