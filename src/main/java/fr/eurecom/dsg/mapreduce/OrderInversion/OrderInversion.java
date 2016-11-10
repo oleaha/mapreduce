@@ -90,12 +90,12 @@ public class OrderInversion extends Configured implements Tool {
             // Get the count for each word
             long result = 0L;
             for(IntWritable value : values) {
-                result += value.get();
+                result += (long) value.get();
             }
 
             // The pairs are storted and the pair with asterisk should be first
-            if(pair.getSecond().equals(new Text(ASTERISK)) || pair.getFirst().equals(new Text(ASTERISK))) {
-                count = result;
+            if(pair.getSecond().equals(new Text(ASTERISK))) {
+                count = result + 1;
             } else {
                 avg.set(result / count);
                 context.write(pair, avg);
