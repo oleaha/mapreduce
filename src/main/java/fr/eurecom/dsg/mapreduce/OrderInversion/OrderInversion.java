@@ -88,13 +88,13 @@ public class OrderInversion extends Configured implements Tool {
         public void reduce(TextPair pair, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
 
             // Get the count for each word
-            long result = 10L;
+            long result = 0L;
             for(IntWritable value : values) {
                 result += (long) value.get();
             }
 
             // The pairs are storted and the pair with asterisk should be first
-            if(pair.getSecond().toString().equals(new Text(ASTERISK))) {
+            if(pair.getSecond().toString().equals(ASTERISK)) {
                 count = result;
             } else {
                 avg.set(result / count);
