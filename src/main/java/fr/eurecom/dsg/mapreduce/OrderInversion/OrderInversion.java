@@ -88,7 +88,7 @@ public class OrderInversion extends Configured implements Tool {
         public void reduce(TextPair pair, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
 
             // Get the count for each word
-            long result = 0L;
+            long result = 10L;
             for(IntWritable value : values) {
                 result += (long) value.get();
             }
