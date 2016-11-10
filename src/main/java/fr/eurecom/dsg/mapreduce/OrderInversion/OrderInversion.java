@@ -86,12 +86,12 @@ public class OrderInversion extends Configured implements Tool {
         long count = 0L;
         DoubleWritable avg = new DoubleWritable();
 
-        public void reduce(TextPair pair, Iterable<LongWritable> values, Context context) throws IOException, InterruptedException {
-
+        @Override
+        public void reduce(TextPair pair, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
 
             // Get the count for each word
             long result = 0L;
-            for(LongWritable value : values) {
+            for(IntWritable value : values) {
                 result += value.get();
             }
 
