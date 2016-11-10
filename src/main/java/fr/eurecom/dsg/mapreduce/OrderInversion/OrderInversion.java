@@ -64,7 +64,7 @@ public class OrderInversion extends Configured implements Tool {
                 IntWritable count = new IntWritable(0);
                 if(words[i].length() > 0) {
 
-                    for (int j = 0; j < words.length; i++) {
+                    for (int j = 0; j < words.length; j++) {
 
                         if(!words[i].equals(words[j]) && words[j].length() > 0) {
                             context.write(new TextPair(words[i], words[j]), new IntWritable(1));
@@ -115,7 +115,7 @@ public class OrderInversion extends Configured implements Tool {
     public int run(String[] args) throws Exception {
         Configuration conf = this.getConf();
 
-        Job job = null;  // TODO: define new job instead of null using conf e setting a name
+        Job job = new Job(conf, "group26-OrderInversion");  // TODO: define new job instead of null using conf e setting a name
 
         // TODO: set job input format
 
@@ -125,13 +125,13 @@ public class OrderInversion extends Configured implements Tool {
 
         job.setMapperClass(OrderInversion.PairMapper.class);
         job.setMapOutputKeyClass(TextPair.class);
-        job.setMapOutputValueClass(LongWritable.class);
+        job.setMapOutputValueClass(IntWritable.class);
 
         // TODO: set reduce class and the reduce output key and value classes
 
         job.setReducerClass(OrderInversion.PairReducer.class);
         job.setOutputKeyClass(TextPair.class);
-        job.setOutputValueClass(LongWritable.class);
+        job.setOutputValueClass(DoubleWritable.class);
 
         // TODO: set job output format
 
