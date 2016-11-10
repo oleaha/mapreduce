@@ -64,7 +64,7 @@ public class OrderInversion extends Configured implements Tool {
                 IntWritable count = new IntWritable(0);
                 if(words[i].length() > 0) {
 
-                    for (int j = 0; j < words.length; i++) {
+                    for (int j = 0; j < words.length; j++) {
 
                         if(!words[i].equals(words[j]) && words[j].length() > 0) {
                             context.write(new TextPair(words[i], words[j]), new IntWritable(1));
